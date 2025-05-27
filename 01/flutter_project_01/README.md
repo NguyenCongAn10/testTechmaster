@@ -1,16 +1,3 @@
-# flutter_project_01
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img width="321" alt="Ảnh màn hình 2025-05-27 lúc 6 55 11 CH" src="https://github.com/user-attachments/assets/c9b9e286-9858-4f37-96e9-74d010f238d2" />
+sử dụng gridView.buider để tạo bàn cờ 8x8
+xử lí sự kiến khi bấm vào nút đặt quân cờ sử dụng hàm placeQueen 
