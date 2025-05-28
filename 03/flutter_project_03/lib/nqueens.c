@@ -1,42 +1,73 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int solutions[92][8];
+#define MAX_SOLUTIONS 92
+#define BOARD_SIZE 8
+
+// Biến toàn cục lưu nghiệm tạm thời
+int tempSolutions[MAX_SOLUTIONS][BOARD_SIZE];
 int solutionCount = 0;
 
+// Kiểm tra vị trí đặt hậu có an toàn
 int isSafe(int queens[], int row, int col) {
     for (int i = 0; i < row; i++) {
         int placedCol = queens[i];
-        if (placedCol == col || // Cùng cột
-            placedCol - i == col - row || // Đường chéo chính
-            placedCol + i == col + row) { // Đường chéo phụ
-            return 0;
+        if (placedCol == col || placedCol - i == col - row || placedCol + i == col + row) {
+            return 0; // Không an toàn
         }
     }
-    return 1;
+    return 1; // An toàn
 }
 
+// Đệ quy tìm tất cả nghiệm
 void backtrack(int queens[], int row) {
-    if (row == 8) {
-        for (int i = 0; i < 8; i++) {
-            solutions[solutionCount][i] = queens[i];
+    if (row == BOARD_SIZE) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            tempSolutions[solutionCount][i] = queens[i];
         }
         solutionCount++;
         return;
     }
-    for (int col = 0; col < 8; col++) {
+    for (int col = 0; col < BOARD_SIZE; col++) {
         if (isSafe(queens, row, col)) {
             queens[row] = col;
             backtrack(queens, row + 1);
-            queens[row] = -1; // Quay lui
+            queens[row] = -1;
         }
     }
 }
 
 int* getSolutions(int* count) {
-    int queens[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
+    if (count == NULL) return NULL;
+
+    int queens[BOARD_SIZE];
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        queens[i] = -1;
+    }
     solutionCount = 0;
+
     backtrack(queens, 0);
+
     *count = solutionCount;
-    return (int*)solutions;
+
+    // In debug
+    printf("Total solutions found: %d\n", solutionCount);
+
+    int* flat = (int*)malloc(sizeof(int) * solutionCount * BOARD_SIZE);
+    if (flat == NULL) return NULL;
+
+    for (int i = 0; i < solutionCount; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            flat[i * BOARD_SIZE + j] = tempSolutions[i][j];
+        }
+    }
+
+    return flat;
+}
+
+// Giải phóng bộ nhớ đã cấp phát
+void freeSolutions(int* ptr) {
+    if (ptr != NULL) {
+        free(ptr);
+    }
 }

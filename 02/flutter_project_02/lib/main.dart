@@ -140,6 +140,10 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const Text(
+                'Vuốt sang trái/phải để xem lời giải khác',
+                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+              ),
             ],
           ),
         ),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart';
 import 'dart:io' show Platform;
+import 'package:ffi/ffi.dart';
 
-typedef GetSolutionsFunc = ffi.Pointer<ffi.Int> Function(ffi.Pointer<ffi.Int>);
-typedef GetSolutions = ffi.Pointer<ffi.Int> Function(ffi.Pointer<ffi.Int>);
+typedef GetSolutionsNative = ffi.Pointer<ffi.Int32> Function(
+    ffi.Pointer<ffi.Int32>);
+typedef GetSolutionsDart = ffi.Pointer<ffi.Int32> Function(
+    ffi.Pointer<ffi.Int32>);
+typedef FreeSolutionsNative = ffi.Void Function(ffi.Pointer<ffi.Int32>);
+typedef FreeSolutionsDart = void Function(ffi.Pointer<ffi.Int32>);
 
 void main() {
   runApp(const MyApp());
@@ -12,19 +16,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const ChessBoardScreen(),
+      home: ChessBoardScreen(),
     );
   }
 }
 
 class ChessBoardScreen extends StatefulWidget {
   const ChessBoardScreen({super.key});
-
   @override
   _ChessBoardScreenState createState() => _ChessBoardScreenState();
 }
@@ -38,38 +40,54 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
   void initState() {
     super.initState();
     loadSolutions();
-    if (solutions.isNotEmpty) {
-      currentQueens = List.from(solutions[0]);
-    }
   }
 
   void loadSolutions() {
     try {
-      final dylib =
-          Platform.isIOS || Platform.isMacOS
-              ? ffi.DynamicLibrary.open('lib/libnqueens.dylib')
-              : Platform.isWindows
-              ? ffi.DynamicLibrary.open('lib/nqueens.dll')
-              : ffi.DynamicLibrary.open('lib/libnqueens.so');
-      final getSolutions = dylib.lookupFunction<GetSolutionsFunc, GetSolutions>(
-        'getSolutions',
+      final dylib = ffi.DynamicLibrary.open(
+        '/Users/admin/testTechmaster/03/flutter_project_03/ios/Runner/libnqueens.dylib',
+      );
+      final getSolutions = dylib
+          .lookupFunction<GetSolutionsNative, GetSolutionsDart>('getSolutions');
+      final freeSolutions =
+          dylib.lookupFunction<FreeSolutionsNative, FreeSolutionsDart>(
+        'freeSolutions',
       );
 
-      final countPtr = calloc<ffi.Int>();
+      final countPtr = calloc<ffi.Int32>();
       final solutionsPtr = getSolutions(countPtr);
       final count = countPtr.value;
 
-      for (int i = 0; i < count; i++) {
-        final solution = <int>[];
-        for (int j = 0; j < 8; j++) {
-          solution.add(solutionsPtr[i * 8 + j]);
-        }
-        solutions.add(solution);
+      if (solutionsPtr == ffi.Pointer<ffi.Int32>.fromAddress(0) ||
+          count <= 0 ||
+          count > 1000) {
+        print(
+          'No solutions or invalid count returned from native code: $count',
+        );
+        calloc.free(countPtr);
+        return;
       }
 
+      final totalInts = count * 8;
+      final solutionsList = solutionsPtr.asTypedList(totalInts);
+
+      solutions = List.generate(
+        count,
+        (i) => solutionsList.sublist(i * 8, (i + 1) * 8),
+      );
+
+      currentQueens = List.from(solutions[0]);
+      currentSolutionIndex = 0;
+
+      freeSolutions(solutionsPtr);
       calloc.free(countPtr);
-    } catch (e) {
-      throw Exception("loi $e");
+
+      setState(() {});
+
+      print('Loaded $count solutions from native code.');
+    } catch (e, st) {
+      print('Error loading solutions from native code: $e');
+      print(st);
     }
   }
 
@@ -92,7 +110,7 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
+    final media = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.blue[100],
       body: GestureDetector(
@@ -104,6 +122,7 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
               Container(
                 width: media.width,
                 height: 500,
+                padding: const EdgeInsets.all(8),
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -120,14 +139,13 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
                     return Container(
                       color: isDark ? Colors.black : Colors.white,
                       child: Center(
-                        child:
-                            hasQueen
-                                ? const Icon(
-                                  Icons.star,
-                                  color: Colors.red,
-                                  size: 40,
-                                )
-                                : null,
+                        child: hasQueen
+                            ? const Icon(
+                                Icons.star,
+                                color: Colors.red,
+                                size: 40,
+                              )
+                            : null,
                       ),
                     );
                   },
@@ -137,15 +155,17 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
               Text(
                 solutions.isEmpty
                     ? 'Không có lời giải'
-                    : currentSolutionIndex >= 0
-                    ? 'Lời giải ${currentSolutionIndex + 1}/${solutions.length}'
-                    : 'Đặt quân hậu tùy chỉnh',
+                    : 'Lời giải ${currentSolutionIndex + 1} / ${solutions.length}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 20),
+              const Text(
+                'Vuốt sang trái/phải để xem lời giải khác',
+                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+              ),
             ],
           ),
         ),
