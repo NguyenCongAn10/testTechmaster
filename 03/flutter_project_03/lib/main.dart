@@ -3,10 +3,10 @@ import 'dart:ffi' as ffi;
 import 'dart:io' show Platform;
 import 'package:ffi/ffi.dart';
 
-typedef GetSolutionsNative = ffi.Pointer<ffi.Int32> Function(
-    ffi.Pointer<ffi.Int32>);
-typedef GetSolutionsDart = ffi.Pointer<ffi.Int32> Function(
-    ffi.Pointer<ffi.Int32>);
+typedef GetSolutionsNative =
+    ffi.Pointer<ffi.Int32> Function(ffi.Pointer<ffi.Int32>);
+typedef GetSolutionsDart =
+    ffi.Pointer<ffi.Int32> Function(ffi.Pointer<ffi.Int32>);
 typedef FreeSolutionsNative = ffi.Void Function(ffi.Pointer<ffi.Int32>);
 typedef FreeSolutionsDart = void Function(ffi.Pointer<ffi.Int32>);
 
@@ -49,10 +49,10 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
       );
       final getSolutions = dylib
           .lookupFunction<GetSolutionsNative, GetSolutionsDart>('getSolutions');
-      final freeSolutions =
-          dylib.lookupFunction<FreeSolutionsNative, FreeSolutionsDart>(
-        'freeSolutions',
-      );
+      final freeSolutions = dylib
+          .lookupFunction<FreeSolutionsNative, FreeSolutionsDart>(
+            'freeSolutions',
+          );
 
       final countPtr = calloc<ffi.Int32>();
       final solutionsPtr = getSolutions(countPtr);
@@ -139,13 +139,14 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
                     return Container(
                       color: isDark ? Colors.black : Colors.white,
                       child: Center(
-                        child: hasQueen
-                            ? const Icon(
-                                Icons.star,
-                                color: Colors.red,
-                                size: 40,
-                              )
-                            : null,
+                        child:
+                            hasQueen
+                                ? const Icon(
+                                  Icons.star,
+                                  color: Colors.red,
+                                  size: 40,
+                                )
+                                : null,
                       ),
                     );
                   },
