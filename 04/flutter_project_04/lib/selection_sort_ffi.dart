@@ -1,35 +1,91 @@
 import 'dart:ffi';
-import 'dart:io';
+import 'dart:io' show Platform;
 import 'package:ffi/ffi.dart';
+import 'package:path/path.dart' as path;
 
-// Load thư viện động
-final DynamicLibrary selectionSortLib = DynamicLibrary.open(
-  '/Users/admin/testTechmaster/04/flutter_project_04/ios/Runner/selection_sort.dylib',
-);
+// Khai báo hàm native
+typedef SelectionSortWithStepsNative =
+    Void Function(Pointer<Int32>, Int32, Pointer<SortStep>, Pointer<Int32>);
 
-// Khai báo hàm C
-typedef c_selection_sort = Void Function(Pointer<Int32> arr, Int32 n);
-typedef dart_selection_sort = void Function(Pointer<Int32> arr, int n);
+typedef SelectionSortWithStepsFunc =
+    void Function(Pointer<Int32>, int, Pointer<SortStep>, Pointer<Int32>);
 
-final dart_selection_sort selectionSort = selectionSortLib
-    .lookupFunction<c_selection_sort, dart_selection_sort>("selectionSort");
+// Cấu trúc SortStep trong Dart
+base class SortStep extends Struct {
+  @Int32()
+  external int current;
 
-// Hàm giúp chạy sắp xếp
-void sortWithFFI(List<int> list) {
-  final ptr = calloc<Int32>(list.length);
+  @Int32()
+  external int compare;
 
-  // Copy dữ liệu từ List sang bộ nhớ C
-  for (var i = 0; i < list.length; i++) {
-    ptr[i] = list[i];
+  @Int32()
+  external int min;
+
+  @Int32()
+  external int swap;
+
+  @Int32()
+  external int stepType;
+
+  @Array(100)
+  external Array<Int32> array;
+}
+
+// Class quản lý thư viện và xử lý
+class SelectionSort {
+  late DynamicLibrary _lib;
+  late SelectionSortWithStepsFunc _selectionSortWithSteps;
+
+  SelectionSort() {
+    // Load dynamic library theo nền tảng
+    _lib = DynamicLibrary.open(
+      '/Users/admin/testTechmaster/04/flutter_project_04/ios/Runner/selection_sort.dylib',
+    );
+
+    _selectionSortWithSteps =
+        _lib
+            .lookup<NativeFunction<SelectionSortWithStepsNative>>(
+              'selectionSortWithSteps',
+            )
+            .asFunction<SelectionSortWithStepsFunc>();
   }
 
-  // Gọi hàm C sắp xếp
-  selectionSort(ptr, list.length);
+  // Trả về Map gồm steps và sortedArray
+  Map<String, dynamic> sortWithSteps(List<int> arr) {
+    final n = arr.length;
+    final arrPtr = malloc<Int32>(n);
+    final stepsPtr = malloc<SortStep>(100); // tối đa 100 bước
+    final stepCountPtr = malloc<Int32>();
 
-  // Copy dữ liệu đã sắp xếp ngược lại List
-  for (var i = 0; i < list.length; i++) {
-    list[i] = ptr[i];
+    try {
+      final intList = arrPtr.asTypedList(n);
+      intList.setAll(0, arr);
+
+      _selectionSortWithSteps(arrPtr, n, stepsPtr, stepCountPtr);
+
+      final stepCount = stepCountPtr.value;
+      final steps = <Map<String, dynamic>>[];
+
+      for (int i = 0; i < stepCount; i++) {
+        final step = stepsPtr[i];
+        steps.add({
+          'current': step.current,
+          'compare': step.compare,
+          'min': step.min,
+          'swap': step.swap,
+          'stepType': step.stepType,
+          'array': List<int>.generate(n, (j) => step.array[j]),
+        });
+      }
+
+      // Mảng đã sắp xếp sau thuật toán
+      final sortedArray = List<int>.generate(n, (i) => intList[i]);
+
+      return {'steps': steps, 'sortedArray': sortedArray};
+    } finally {
+      malloc.free(arrPtr);
+      malloc.free(stepsPtr);
+      malloc.free(stepCountPtr);
+    }
   }
-
-  calloc.free(ptr);
 }
