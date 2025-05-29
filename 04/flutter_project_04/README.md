@@ -1,16 +1,11 @@
-# flutter_project_04
+link clip [https://youtube.com/shorts/0VLGpQKoT4c]
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Viết selection_sort.c phải ghi lại toàn bộ các bước của thuật toán(so sánh, hoán đổi, cập nhạt min).
+gọi bằng ffi của dart.Sử dụng list và AnimatedContainer tạo mảng và hiệu ứng dổi màu cập nhật dộ cao.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+Sử dụng AI để tạo file ffi của dart, sửa lỗi khi thuật toán sai bằng cách gửi dọn code rồi thêm prompt.

@@ -1,4 +1,13 @@
 <img width="320" alt="Ảnh màn hình 2025-05-27 lúc 7 06 49 CH" src="https://github.com/user-attachments/assets/473d80f6-b48a-40e1-9c1f-ccee89a4a210" />
 
 
-sử dụng thuật toán tìm kiếm từ ytb, sử dụng chat GPT để làm phần quẹt phải trái: gửi đoạn code đã làm cùng với prompt:"Tạo hàm  sự kiện  quệt trái và phải để di chuyển giữa các lời giải"
+
+
+Đặt 8 quân hậu mà k quân nào tấn công nhau thì phải đặt mỗi hàng, cột 1 quân hậu, không quân nào nằm cùng đường chéo.thử tất cả cá cột và hàng nếu quân hậu an toàn thì đặt tại row, col rồi thử đến hàng tiếp theo.
+
+
+Sử dụng DragEndDetails cho thuộc tính onHorizontalDragEnd của GestureDetector khi details.primaryVelocity < 0( kéo sang trái tức muốn lướt sang phải) tăng chỉ số lời giải lên 1 à ngược  lại.
+
+
+
+Sử dụng chat GPT để làm phần quẹt phải trái: gửi đoạn code đã làm cùng với prompt:"Tạo hàm  sự kiện  quệt trái và phải để di chuyển giữa các lời giải"
