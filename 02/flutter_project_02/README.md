@@ -1,4 +1,4 @@
-<img width="320" alt="Ảnh màn hình 2025-05-27 lúc 7 06 49 CH" src="https://github.com/user-attachments/assets/473d80f6-b48a-40e1-9c1f-ccee89a4a210" />
+link video [https://youtube.com/shorts/Gn7tFJIqiCM]
 
 
 
