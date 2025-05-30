@@ -132,23 +132,24 @@ link video [https://youtu.be/KjRdVZXX22E]
   - Vuốt ngang trên màn hình (sử dụng GestureDetector với thuộc tính onHorizontalDragEnd: handleSwipe ) để chuyển qua lời giải tiếp theo hoặc quay lại lời giải trước.
     + Kiểm tra xem có lời giải không.
     + Gọi setState để cập nhật lời giải khi thay đổi currentQueens.
-   
-         void handleSwipe(DragEndDetails details) {
-            if (solutions.isEmpty) return;
-            setState(() {
-              if (details.primaryVelocity! < 0) {                          // Vuốt từ phải → trái (hướng âm), tức là muốn chuyển tới lời giải tiếp theo
-                if (currentSolutionIndex < solutions.length - 1) {              //Nếu chưa đến lời giải cuối cùng:
-                  currentSolutionIndex++;                                       //Tăng currentSolutionIndex
-                  currentQueens = List.from(solutions[currentSolutionIndex]);   //Cập nhật currentQueens theo lời giải mới (cần List.from để tạo bản sao, tránh sửa mảng gốc)
-          
-                  }
-              } else if (details.primaryVelocity! > 0) {             // Vuốt từ trái → phải (hướng dương), tức là muốn quay lại lời giải trước
-                if (currentSolutionIndex > 0) {                      //Nếu không phải lời giải đầu tiên,giảm chỉ số và cập nhật quân hậu đang hiển thị
-                  currentSolutionIndex--;
-                  currentQueens = List.from(solutions[currentSolutionIndex]);
-                }
-              }
-            });
-          }
 
+   
+           void handleSwipe(DragEndDetails details) {
+              if (solutions.isEmpty) return;
+              setState(() {
+                if (details.primaryVelocity! < 0) {                          // Vuốt từ phải → trái (hướng âm), tức là muốn chuyển tới lời giải tiếp theo
+                  if (currentSolutionIndex < solutions.length - 1) {              //Nếu chưa đến lời giải cuối cùng:
+                    currentSolutionIndex++;                                       //Tăng currentSolutionIndex
+                    currentQueens = List.from(solutions[currentSolutionIndex]);   //Cập nhật currentQueens theo lời giải mới (cần List.from để tạo bản sao, tránh sửa mảng gốc)
+            
+                    }
+                } else if (details.primaryVelocity! > 0) {             // Vuốt từ trái → phải (hướng dương), tức là muốn quay lại lời giải trước
+                  if (currentSolutionIndex > 0) {                      //Nếu không phải lời giải đầu tiên,giảm chỉ số và cập nhật quân hậu đang hiển thị
+                    currentSolutionIndex--;
+                    currentQueens = List.from(solutions[currentSolutionIndex]);
+                  }
+                }
+              });
+            }
+  
 
