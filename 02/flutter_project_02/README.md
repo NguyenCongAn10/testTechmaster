@@ -2,6 +2,7 @@ link video [https://youtu.be/rogbpk_oFUA]
 
 
 Ý tưởng và giải pháp
+
 1.Thuật toán giải bài toán 8 quân hậu:
 - Sử dụng phương pháp Backtracking (quay lui) để tìm tất cả lời giải.
   + Mỗi lời giải phải có đủ 8 phần tử queens[row] = col,sau đó thêm vào danh sách lời giải.
