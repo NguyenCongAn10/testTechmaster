@@ -15,9 +15,9 @@ link video [https://youtu.be/rogbpk_oFUA]
 
   for (int col = 0; col < 8; col++) {
     if (isSafe(queens, row, col)) {
-      queens[row] = col;             // Đặt quân hậu
-      backtrack(queens, row + 1);    // Thử tiếp hàng sau
-      queens[row] = -1;              // Quay lui (reset vị trí)
+      queens[row] = col; // Đặt quân hậu
+      backtrack(queens, row + 1); // Thử tiếp hàng sau
+      queens[row] = -1; // Quay lui (reset vị trí)
     }
   }
 }
