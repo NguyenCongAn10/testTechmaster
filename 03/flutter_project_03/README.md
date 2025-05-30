@@ -1,6 +1,7 @@
 link video [https://youtu.be/KjRdVZXX22E]
 
-Ý tưởng và giải pháp
+Ý tưởng và giải pháp.
+
 1.Thuật toán giải bài toán 8 quân hậu:
   - Hàm isSafe() kiểm tra vị trí đặt quân hậu.(không cùng hàng, cột và đường chéo).
     
