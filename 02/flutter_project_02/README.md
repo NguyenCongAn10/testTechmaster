@@ -44,6 +44,8 @@ link video [https://youtu.be/rogbpk_oFUA]
 -Hàm solveNQeens tạo danh sách queens và gọi hàm backtrack.
 
 - initState() gọi solveNQueens() khi khởi tạo màn hình, và hiển thị lời giải đầu tiên.
+
+  
 2.Giao diện:
 - Dùng GridView.builder để vẽ bàn cờ 8x8 và thông tin lời giải.
 - Icon hình ngôi sao đỏ đại diện cho một quân hậu. Dựa vào danh sách currentQueens để đặt biểu tượng quân hậu
