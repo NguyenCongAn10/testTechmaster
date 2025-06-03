@@ -45,7 +45,7 @@ class _ChessBoardScreenState extends State<ChessBoardScreen> {
   void loadSolutions() {
     try {
       final dylib = ffi.DynamicLibrary.open(
-        '/Users/admin/testTechmaster/03/flutter_project_03/ios/Runner/libnqueens.dylib',
+        '/Users/admin/testTechmaster/03/ios/Runner/libnqueens.dylib',
       );
       final getSolutions = dylib
           .lookupFunction<GetSolutionsNative, GetSolutionsDart>('getSolutions');

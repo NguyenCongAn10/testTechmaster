@@ -39,7 +39,7 @@ class SelectionSort {
   SelectionSort() {
     // Load dynamic library theo nền tảng
     _lib = DynamicLibrary.open(
-      '/Users/admin/testTechmaster/04/flutter_project_04/ios/Runner/selection_sort.dylib',
+      '/Users/admin/testTechmaster/04/ios/Runner/selection_sort.dylib',
     );
 
     _selectionSortWithSteps =
